@@ -1,10 +1,15 @@
 from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTextEdit, QWidget
 
-tokens = ('repeat', 'until', ':=', '>', '<' '>=', '<=')
+reserved_words = ('repeat', 'until')
 
-tokens_2 = (';', '=')
+comparators = ('=', '>', '<' '>=', '<=')
+
+assignment = (':=')
+
+tokens = (';', '=')
 
 lexemes = []
+types = []
 
 
 def submit():
@@ -34,7 +39,7 @@ def submit():
                 #     break
             lexemes.append(temp_string)
 
-        elif targetRegEx[i] in tokens_2:  # (';', '=')
+        elif targetRegEx[i] in tokens:  # (';', '=')
             lexemes.append(targetRegEx[i])
             i += 1
 
@@ -64,7 +69,22 @@ def submit():
             print('Wrong Expression !')
             exit()
 
+    for i in lexemes:
+        if i.isdigit():
+            types.append('NUM')
+        elif i in comparators:
+            types.append('comparators')
+        elif i in reserved_words:
+            types.append(i)
+        elif i in assignment:
+            types.append('assignment')
+        elif i == ';':
+            types.append(';')
+        else:
+            types.append('ID')
+
     print('lexemes list:', lexemes, '\n')
+    print('types list:', types, '\n')
     exit()
 
 
