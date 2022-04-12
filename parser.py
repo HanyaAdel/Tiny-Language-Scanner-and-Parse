@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTextEdit, QWidget
 
-tokens_1 = ('repeat', 'Until')
+tokens_1 = ('repeat', 'until')
 tokens_2 = (':=', ';')
 comparators = ('=', '>', '<', '>=', '<=')
 # NUM = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
@@ -61,5 +61,5 @@ app.exec()
 repeat
 x := 5;
 y := x;
-Until x = 5
+until x = 5
 """
