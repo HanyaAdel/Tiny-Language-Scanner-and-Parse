@@ -1,47 +1,39 @@
-import networkx as nx
-import matplotlib.pyplot as plt
+from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTextEdit, QWidget
+from scanner2 import  Scanner
+sc = Scanner()
 
-node = 'A'
+def submit():
+    input = text_edit.toPlainText()
+    result = sc.scan(input)
+    status = result[0]
+    tokens = result[1]
+    types = result[2]
+    status_label.setText("Status: "+status)
 
-s1 = 'repeat until'
-
-G = nx.DiGraph()
-
-positions = {
-    'A': [0, 0],
-    'B': [20, 0],
-    'C': [40, 0],
-    'D': [60, 0],
-    'E': [80, 0],
-    'F': [100, 0],
-    'G': [120, 0],
-}
+    j = 0
+    while (j < len(tokens)):
+        print('token:', tokens[j], ",type:", types[j])
+        j += 1
 
 
-def add_node():
-    global node
-    G.add_node(node)
-    node = chr(ord(node) + 1)
+app = QApplication([])
+main_widget = QWidget()
 
+text_edit = QTextEdit()
+label = QLabel('Enter the TINY sample code below !')
+status_label = QLabel("Status: Waiting...")
+submit_button = QPushButton('Submit')
+submit_button.clicked.connect(submit)
 
-def add_edge(a, b, c):
-    G.add_edge(a, b, relation=c)
+grid = QGridLayout()
+grid.addWidget(label)
+grid.addWidget(text_edit)
+grid.addWidget(status_label)
+grid.addWidget(submit_button)
 
+main_widget.setGeometry(300, 300, 400, 400)
+main_widget.setWindowTitle('Lexer')
+main_widget.setLayout(grid)
+main_widget.show()
 
-def draw_graph():
-    pos = nx.spectral_layout(G)
-    nx.draw_networkx(G, pos, with_labels=True, node_size=300, node_color='cyan')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'relation'), font_size=10)
-    plt.show()
-
-
-for i in range(len(s1)):
-    add_node()
-
-temp = 'A'
-
-for i in range(len(s1)):
-    add_edge(temp, chr(ord(temp) + 1), s1[i])
-    temp = chr(ord(temp) + 1)
-
-draw_graph()
+app.exec()
