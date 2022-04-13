@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTex
 
 reserved_words = ('repeat', 'until')
 
-comparators = ('=', '>', '<' '>=', '<=')
+comparators = ('=', '>', '<', '>=', '<=')
 
 assignment = (':=')
 
@@ -24,19 +24,22 @@ def submit():
         if targetRegEx[i].isdigit():  # NUM
             temp_string += targetRegEx[i]
             i += 1
-            while i < len(targetRegEx) and targetRegEx[i].isdigit():
-                temp_string += targetRegEx[i]
+            while i < len(targetRegEx):
+                if targetRegEx[i].isdigit():
+                    temp_string += targetRegEx[i]
+
+                elif targetRegEx[i].isalpha():
+                    print('Wrong Token !')
+                    exit()
                 i += 1
             lexemes.append(temp_string)
 
-        elif 'a' <= targetRegEx[i] <= 'z' or 'A' <= targetRegEx[i] <= 'Z':  # ID
+        elif targetRegEx[i].isalpha():  # ID # TODO (_)
             temp_string += targetRegEx[i]
             i += 1
-            while i < len(targetRegEx) and ('a' <= targetRegEx[i] <= 'z' or 'A' <= targetRegEx[i] <= 'Z' or targetRegEx[i].isdigit()):
+            while i < len(targetRegEx) and (targetRegEx[i].isalpha() or targetRegEx[i].isdigit()):
                 temp_string += targetRegEx[i]
                 i += 1
-                # if temp_string in tokens: # TODO ??
-                #     break
             lexemes.append(temp_string)
 
         elif targetRegEx[i] in tokens:  # (';', '=')
@@ -58,7 +61,7 @@ def submit():
                 temp_string += targetRegEx[i]
                 i += 1
             else:
-                print('Wrong Token !')  # TODO ??
+                print('Wrong Token !')
                 exit()
             lexemes.append(temp_string)
 
