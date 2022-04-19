@@ -81,6 +81,7 @@ class Scanner:
                 state = "start"
         if (state == "inassign"):
             print("syntax error")
+            state = "error"
         elif (state != "start" and state != "doneincr"):
             tokens.append(temp_token)
         status = "Accepted"
