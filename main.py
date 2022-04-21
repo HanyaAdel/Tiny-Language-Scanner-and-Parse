@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTextEdit, QWidget
+from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTextEdit, QWidget, QTableWidget, QTableWidgetItem,QHBoxLayout,QVBoxLayout
 from scanner import Scanner
 from dfa import dfa
 from graph import Graph
@@ -14,6 +14,7 @@ def submit():
     types = result[2]
     scanner_status_label.setText("Scanner status: "+status)
 
+
     j = 0
     while (j < len(tokens)):
         print('token:', tokens[j], ",type:", types[j])
@@ -24,10 +25,22 @@ def submit():
         syntax_status_label.setText("Syntax status: " + dfaresult[0])
     else:
         dfa_button.setEnabled(False)
+        types[len(types)-1]="illegal token"  #modify this
+    populateTable(tokens, types)
 
 def showdfa():
     global dfaresult
     Graph(dfaresult[1])
+
+def populateTable(tokens,types):
+    row = 0
+    while(row<len(tokens)):
+        table.setRowCount(len(tokens))
+        table.setItem(row,0,QTableWidgetItem(tokens[row]))
+        table.setItem(row, 1, QTableWidgetItem(types[row]))
+        row+=1
+
+    #table.insertRow(currentrowcount,0,QTableWidgetItem("Some text"))
 
 
 
@@ -35,6 +48,7 @@ app = QApplication([])
 main_widget = QWidget()
 
 text_edit = QTextEdit()
+text_edit.setTabStopWidth(15)
 label = QLabel('Enter the TINY sample code below !')
 scanner_status_label = QLabel("Scanner status: Waiting...")
 syntax_status_label = QLabel("Syntax status: Waiting...")
@@ -44,15 +58,31 @@ submit_button.clicked.connect(submit)
 dfa_button.setEnabled(False)
 dfa_button.clicked.connect(showdfa)
 
-grid = QGridLayout()
+table= QTableWidget()
+table.setColumnCount(2)
+
+table.setHorizontalHeaderLabels(["Token","Type"])
+table.horizontalHeader().setStretchLastSection(True)
+
+
+#grid = QGridLayout()
+grid = QVBoxLayout()
 grid.addWidget(label)
-grid.addWidget(text_edit)
+subgrid = QHBoxLayout()
+subgrid.addWidget(text_edit)
+subgrid.addWidget(table)
+#grid.addWidget(text_edit)
+grid.addLayout((subgrid))
 grid.addWidget(scanner_status_label)
 grid.addWidget(syntax_status_label)
 grid.addWidget(submit_button)
 grid.addWidget(dfa_button)
+#grid.addWidget(tableWidget)
 
-main_widget.setGeometry(300, 300, 400, 400)
+
+#main_widget.setGeometry(500, 500, 900, 700)
+main_widget.setFixedSize(900,500)
+
 main_widget.setWindowTitle('Lexer')
 main_widget.setLayout(grid)
 main_widget.show()
