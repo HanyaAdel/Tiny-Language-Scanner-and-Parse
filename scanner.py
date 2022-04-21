@@ -69,6 +69,7 @@ class Scanner:
                         state = "done"
             else:
                 state = "error"
+                temp_token += input_text[i]
             if state == "error":
                 print("syntax error")
                 break
@@ -82,6 +83,7 @@ class Scanner:
         if (state == "inassign"):
             print("syntax error")
             state = "error"
+            tokens.append(":")
         elif (state != "start" and state != "doneincr"):
             tokens.append(temp_token)
         status = "Accepted"
