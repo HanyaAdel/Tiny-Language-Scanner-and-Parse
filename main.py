@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QPushButton, QGridLayout, QLabel, QTextEdit, QWidget, QTableWidget, QTableWidgetItem,QHBoxLayout,QVBoxLayout
+from grammar import Grammar
 from scanner import Scanner
 from dfa import dfa
 from graph import Graph
@@ -12,6 +13,8 @@ def submit():
     status = result[0]
     tokens = result[1]
     types = result[2]
+    gr = Grammar()
+    gr.func(types)
     scanner_status_label.setText("Scanner status: "+status)
 
 
