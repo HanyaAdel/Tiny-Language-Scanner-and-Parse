@@ -4,6 +4,7 @@ from scanner import Scanner
 from dfa import dfa
 from graph import Graph
 sc = Scanner()
+gr = Grammar()
 dfa = dfa()
 dfaresult = []
 def submit():
@@ -13,7 +14,6 @@ def submit():
     status = result[0]
     tokens = result[1]
     types = result[2]
-    gr = Grammar()
     gr.func(types)
     scanner_status_label.setText("Scanner status: "+status)
 

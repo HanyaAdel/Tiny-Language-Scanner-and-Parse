@@ -34,6 +34,7 @@
     #9 ---> number
 
 import copy
+from inspect import stack
 
 class Grammar:
         
@@ -180,20 +181,19 @@ class Grammar:
 
 
 
-
-
-
-
-
-    #In = ["identifier", ":=", "number", ";","$"]
-
+    def clr(self):
+        self.In.clear()
+        self.stack_table.clear()
+        self.symbols.clear()
+        self.stack.clear()
+        self.stack.append(0)
 
 
     def func(self, types=[]):
-        
+        self.clr()
         self.changeTokens(types)
         self.In.append("$")
-        
+
         while len(self.In) > 0:
 
 
@@ -261,6 +261,8 @@ class Grammar:
 
         for l in self.stack_table:
             print(l)
+        
+        print("-------------------------------------------------------------------------")
 
 
             
