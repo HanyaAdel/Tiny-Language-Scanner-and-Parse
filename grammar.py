@@ -34,7 +34,6 @@
     #9 ---> number
 
 import copy
-from inspect import stack
 
 class Grammar:
         
