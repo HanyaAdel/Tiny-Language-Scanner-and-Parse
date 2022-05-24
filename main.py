@@ -5,7 +5,7 @@ from scanner import Scanner
 from dfa import dfa
 from graph import Graph
 from stack_table import StackTable
-from tree import display
+from tree import display, initialize, reset
 
 sc = Scanner()
 gr = Grammar()
@@ -20,6 +20,8 @@ def submit():
     status = result[0]
     tokens = result[1]
     types = result[2]
+    reset()
+    initialize(gr)
     gr.func(types, tokens)
     scanner_status_label.setText("Scanner status: " + status)
 
@@ -35,6 +37,12 @@ def submit():
         dfa_button.setEnabled(False)
         types[len(types) - 1] = "illegal token"  # modify this
     populateTable(tokens, types)
+    if gr.accepted:
+        tree_button.setEnabled(True)
+        parse_status_label.setText("Parse Status: Accepted")
+    else:
+        tree_button.setEnabled(False)
+        parse_status_label.setText("Parse Status: Rejected")
 
 
 def showdfa():
@@ -58,6 +66,7 @@ def show_stack_table():
     dialog.exec_()
 
 def draw_tree():
+
     display()
 
 
@@ -69,6 +78,7 @@ text_edit.setTabStopWidth(15)
 label = QLabel('Enter the TINY sample code below !')
 scanner_status_label = QLabel("Scanner status: Waiting...")
 syntax_status_label = QLabel("Syntax status: Waiting...")
+parse_status_label = QLabel("Parse Status: Waiting...")
 submit_button = QPushButton('Submit')
 dfa_button = QPushButton('Show DFA')
 stack_button = QPushButton('Show Stack Table')
@@ -78,6 +88,7 @@ dfa_button.setEnabled(False)
 dfa_button.clicked.connect(showdfa)
 stack_button.clicked.connect(show_stack_table)
 tree_button.clicked.connect(draw_tree)
+tree_button.setEnabled(False)
 
 table = QTableWidget()
 table.setColumnCount(2)
@@ -95,6 +106,7 @@ subgrid.addWidget(table)
 grid.addLayout((subgrid))
 grid.addWidget(scanner_status_label)
 grid.addWidget(syntax_status_label)
+grid.addWidget(parse_status_label)
 grid.addWidget(submit_button)
 grid.addWidget(dfa_button)
 grid.addWidget(stack_button)

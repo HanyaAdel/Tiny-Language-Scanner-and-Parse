@@ -35,6 +35,7 @@
 
 
 import copy
+from tree import tree_add, tree_root
 
 class Grammar:
         
@@ -43,7 +44,8 @@ class Grammar:
     mapToken = []
     stack_table = []
     stack_table_modified = []
-    cnt =  1
+    cnt = 1
+    accepted = False
     parseTable = {
         0: {
             'repeat': 's5',
@@ -195,6 +197,7 @@ class Grammar:
         self.nodes.clear()
         self.cnt = 1
         self.symbolsNumber.clear()
+        self.accepted = False
 
 
     def func(self, types=[], tokens = []):
@@ -246,6 +249,7 @@ class Grammar:
             self.stack_table_modified.append(tempModified)
 
             if action == "acc":
+                self.accepted = True
                 print("accepted")
                 break
 
@@ -255,22 +259,31 @@ class Grammar:
                 self.mapToken.pop(0)
                 self.stack.append(int(action[1:]))
                 self.symbols.append(currInput)
+                tempNodes = [currStatment, currToken]
+                self.nodes.append(tempNodes)
                 
             
 
             elif action[0] == 'r':
                 state = int(action[1:])
                 seq = self.rightOp_dict[state]
-                
+                leftOp = self.leftOp_dict[state]
                 subList = self.symbols[-len(seq):]
-
+                currStatment = leftOp
+                currToken = leftOp
                 if (subList == seq):
+                    tempNodes = [currStatment, currToken]
+                    self.nodes.append(tempNodes)
+                    temp_list = []
+                    for i in range(len(self.symbolsNumber)-len(seq), len(self.symbolsNumber)):
+                        temp_list.append(self.symbolsNumber[i])
+                    print(temp_list)
+                    tree_add(temp_list,int(self.cnt-2))
                     del self.symbols[-len(seq):]
                     del self.symbolsNumber[-len (seq):]
-                    leftOp = self.leftOp_dict[state]
+
                     self.symbols.append(leftOp)
-                    currStatment = leftOp
-                    currToken = leftOp
+
                     del self.stack[-len(seq):]
                     lastElement = self.stack[-1]
                     element = self.parseTable[lastElement][self.symbols[-1]]
@@ -282,10 +295,13 @@ class Grammar:
                 break
 
             self.symbolsNumber.append(self.cnt -2)
-            tempNodes = [currStatment, currToken]
-            self.nodes.append(tempNodes)
+            # tempNodes = [currStatment, currToken]
+            # self.nodes.append(tempNodes)
 
             #print(temp)
+        self.nodes.append(["stmt-seq'","stmt-seq'"])
+        tree_add([self.cnt-3],self.cnt-2)
+        tree_root(self.cnt-2)
 
         for l in self.stack_table:
             print(l)
