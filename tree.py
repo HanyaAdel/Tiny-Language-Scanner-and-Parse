@@ -9,19 +9,19 @@ i = int(0)
 
 nodes = [
     ["repeat","repeat"],                #0
-    ["id","x"],                         #1
+    ["ID","x"],                         #1
     [":=",":="],                        #2
-    ["id","y"],                         #3
+    ["Number","50"],                    #3
     [";",";"],                          #4
     ["until","until"],                  #5
-    ["id","z"],                         #6
+    ["ID","z"],                         #6
     ["factor","factor"],                #7
     ["assign-stmt","assign-stmt"],      #8
     ["statement","statement"],          #9
     ["smt-seq","semt-seq"],             #10
     ["repeat-stmt","repeat-stmt"],      #11
     ["statement","statement"],          #12
-    ["stmt-seq","stmt-seq"],             #13
+    ["stmt-seq","stmt-seq"],            #13
     ["stmt-seq'","stmt-seq'"]           #14
 ]
 """"
@@ -52,7 +52,11 @@ def tree_add(children,parent):
     G.add_node(parent,label = nodes[parent][1], ordering = "out")
 
     for child in children:
-        G.add_node(child, label = nodes[child][1])
+        if(nodes[child][0]=="ID" or nodes[child][0]=="Number"):
+            label = str(nodes[child][0])+"\n"+str(nodes[child][1])
+            G.add_node(child, label=label)
+        else:
+            G.add_node(child, label = nodes[child][1])
         G.add_edge(parent,child)        #see if reversing this makes a difference
 
 
@@ -60,23 +64,24 @@ def tree_add(children,parent):
 def draw():
     positions = graphviz_layout(G, prog="dot", root=root_node)
     nx.draw(G, pos=positions,labels = nx.get_node_attributes(G,"label"), with_labels=True, node_color="White",
-            node_size = 1000,node_shape='s',edgecolors=None,arrowstyle='-')
+            node_size = 1000,node_shape='s',edgecolors=None)
 
 
-tree_add([3], 7)
-tree_add([1, 2, 7, 4], 8)
-tree_add([8], 9)
-tree_add([9], 10)
-tree_add([0, 10, 5, 6], 11)
-tree_add([11], 12)
-tree_add([12], 13)
+# tree_add([3], 7)
+# tree_add([1, 2, 7, 4], 8)
+# tree_add([8], 9)
+# tree_add([9], 10)
+# tree_add([0, 10, 5, 6], 11)
+# tree_add([11], 12)
+# tree_add([12], 13)
+#
+# # after accept
+# tree_add([13], 14)
+# tree_root(14)
 
-# after accept
-tree_add([13], 14)
-tree_root(14)
-
-draw()
-figmanager = plt.get_current_fig_manager()
-figmanager.window.showMaximized()
-fig.canvas.manager.set_window_title("Parse Tree")
-plt.show()
+def display():
+    draw()
+    figmanager = plt.get_current_fig_manager()
+    figmanager.window.showMaximized()
+    fig.canvas.manager.set_window_title("Parse Tree")
+    #plt.show()

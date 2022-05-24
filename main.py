@@ -5,6 +5,7 @@ from scanner import Scanner
 from dfa import dfa
 from graph import Graph
 from stack_table import StackTable
+from tree import display
 
 sc = Scanner()
 gr = Grammar()
@@ -56,6 +57,9 @@ def show_stack_table():
     dialog = StackTable(parse_list=gr.stack_table)
     dialog.exec_()
 
+def draw_tree():
+    display()
+
 
 app = QApplication([])
 main_widget = QWidget()
@@ -68,10 +72,12 @@ syntax_status_label = QLabel("Syntax status: Waiting...")
 submit_button = QPushButton('Submit')
 dfa_button = QPushButton('Show DFA')
 stack_button = QPushButton('Show Stack Table')
+tree_button = QPushButton('Show Parse Tree')
 submit_button.clicked.connect(submit)
 dfa_button.setEnabled(False)
 dfa_button.clicked.connect(showdfa)
 stack_button.clicked.connect(show_stack_table)
+tree_button.clicked.connect(draw_tree)
 
 table = QTableWidget()
 table.setColumnCount(2)
@@ -92,6 +98,7 @@ grid.addWidget(syntax_status_label)
 grid.addWidget(submit_button)
 grid.addWidget(dfa_button)
 grid.addWidget(stack_button)
+grid.addWidget(tree_button)
 # grid.addWidget(tableWidget)
 
 
