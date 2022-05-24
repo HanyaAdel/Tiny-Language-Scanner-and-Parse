@@ -33,13 +33,16 @@
     #8 ---> identifier
     #9 ---> number
 
+
 import copy
 
 class Grammar:
         
     In = []
     nodes = []
+    mapToken = []
     stack_table = []
+    stack_table_modified = []
     cnt =  1
     parseTable = {
         0: {
@@ -160,8 +163,7 @@ class Grammar:
     }
 
     stack, symbols = [0], []
-
-
+    symbolsNumber = []
     def changeTokens(self, types=[], tokens = []):
 
         for token in types:
@@ -177,47 +179,58 @@ class Grammar:
                 self.In.append("repeat")
             elif token == "until":
                 self.In.append("until")
-
-        inCpy = copy.deepcopy(self.In)
-        tokenCpy = copy.deepcopy(tokens)
-        self.nodes.append (inCpy)
-        self.nodes.append (tokenCpy)
+        
+        self.mapToken = copy.deepcopy(tokens)
 
         
 
     def clr(self):
         self.In.clear()
         self.stack_table.clear()
+        self.stack_table_modified.clear()
         self.symbols.clear()
         self.stack.clear()
         self.stack.append(0)
+        self.mapToken.clear()
         self.nodes.clear()
+        self.cnt = 1
+        self.symbolsNumber.clear()
 
 
     def func(self, types=[], tokens = []):
         self.clr()
         self.changeTokens(types, tokens)
         self.In.append("$")
-
+        self.mapToken.append("$")
         while len(self.In) > 0:
 
 
-            temp = []
+            temp = [] 
+            tempModified = []
+            
             temp.append(self.cnt)
+            tempModified.append(self.cnt)
+            
             self.cnt +=1
+            
             stackCpy = copy.deepcopy(self.stack)
             symbolCpy = copy.deepcopy(self.symbols)
+            symbolsNumberCpy = copy.deepcopy(self.symbolsNumber)
             inCpy = copy.deepcopy(self.In)
+            
             temp.append(stackCpy)
             temp.append(symbolCpy)
             temp.append(inCpy)
 
-
+            tempModified.append(stackCpy)
+            tempModified.append(symbolsNumberCpy)
+            tempModified.append(inCpy)
 
             currInput = self.In[0]
-            
+            currToken = self.mapToken[0]
+            currStatment = currInput
             lastElement = self.stack[-1]
-
+            
             action = ""
 
             if currInput in self.parseTable[lastElement].keys():
@@ -227,8 +240,10 @@ class Grammar:
                 break
             
             temp.append(action)
+            tempModified.append(action)
 
             self.stack_table.append(temp)
+            self.stack_table_modified.append(tempModified)
 
             if action == "acc":
                 print("accepted")
@@ -237,8 +252,10 @@ class Grammar:
             
             elif action[0] == 's':
                 self.In.pop(0)
+                self.mapToken.pop(0)
                 self.stack.append(int(action[1:]))
                 self.symbols.append(currInput)
+                
             
 
             elif action[0] == 'r':
@@ -249,9 +266,11 @@ class Grammar:
 
                 if (subList == seq):
                     del self.symbols[-len(seq):]
+                    del self.symbolsNumber[-len (seq):]
                     leftOp = self.leftOp_dict[state]
                     self.symbols.append(leftOp)
-
+                    currStatment = leftOp
+                    currToken = leftOp
                     del self.stack[-len(seq):]
                     lastElement = self.stack[-1]
                     element = self.parseTable[lastElement][self.symbols[-1]]
@@ -262,9 +281,17 @@ class Grammar:
                 print ("not accepted" )
                 break
 
+            self.symbolsNumber.append(self.cnt -2)
+            tempNodes = [currStatment, currToken]
+            self.nodes.append(tempNodes)
+
             #print(temp)
 
         for l in self.stack_table:
+            print(l)
+        print("-------------------------------------------------------------------------")
+
+        for l in self.stack_table_modified:
             print(l)
         print("-------------------------------------------------------------------------")
         for node in self.nodes:
