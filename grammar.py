@@ -38,7 +38,7 @@ import copy
 class Grammar:
         
     In = []
-
+    nodes = []
     stack_table = []
     cnt =  1
     parseTable = {
@@ -162,8 +162,8 @@ class Grammar:
     stack, symbols = [0], []
 
 
-    def changeTokens(self, types=[]):
-        
+    def changeTokens(self, types=[], tokens = []):
+
         for token in types:
             if token == "ID":
                 self.In.append("identifier")
@@ -178,7 +178,12 @@ class Grammar:
             elif token == "until":
                 self.In.append("until")
 
+        inCpy = copy.deepcopy(self.In)
+        tokenCpy = copy.deepcopy(tokens)
+        self.nodes.append (inCpy)
+        self.nodes.append (tokenCpy)
 
+        
 
     def clr(self):
         self.In.clear()
@@ -186,11 +191,12 @@ class Grammar:
         self.symbols.clear()
         self.stack.clear()
         self.stack.append(0)
+        self.nodes.clear()
 
 
-    def func(self, types=[]):
+    def func(self, types=[], tokens = []):
         self.clr()
-        self.changeTokens(types)
+        self.changeTokens(types, tokens)
         self.In.append("$")
 
         while len(self.In) > 0:
@@ -260,7 +266,9 @@ class Grammar:
 
         for l in self.stack_table:
             print(l)
-        
+        print("-------------------------------------------------------------------------")
+        for node in self.nodes:
+            print(node)
         print("-------------------------------------------------------------------------")
 
 

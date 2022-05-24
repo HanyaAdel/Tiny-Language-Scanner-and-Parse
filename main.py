@@ -19,7 +19,7 @@ def submit():
     status = result[0]
     tokens = result[1]
     types = result[2]
-    gr.func(types)
+    gr.func(types, tokens)
     scanner_status_label.setText("Scanner status: " + status)
 
     j = 0
