@@ -169,18 +169,21 @@ class Grammar:
     def changeTokens(self, types=[], tokens = []):
 
         for token in types:
-            if token == "ID":
-                self.In.append("identifier")
-            elif token == "NUM":
-                self.In.append("number")
-            elif token == "assign":
-                self.In.append(":=")
-            elif token == ";":
-                self.In.append(";")
-            elif token == "repeat":
-                self.In.append("repeat")
-            elif token == "until":
-                self.In.append("until")
+            self.In.append(token)
+            # if token == "ID":
+            #     self.In.append("identifier")
+            # elif token == "NUM":
+            #     self.In.append("number")
+            # elif token == "assign":
+            #     self.In.append(":=")
+            # elif token == ";":
+            #     self.In.append(";")
+            # elif token == "repeat":
+            #     self.In.append("repeat")
+            # elif token == "until":
+            #     self.In.append("until")
+            # elif token == "COMP":
+            #     self.In.append("=")
         
         self.mapToken = copy.deepcopy(tokens)
 
