@@ -31,18 +31,20 @@ def submit():
         j += 1
     if status == 'Accepted':
         dfa_button.setEnabled(True)
+        stack_button.setEnabled(True)
         dfaresult = dfa.scan(types)
         syntax_status_label.setText("Syntax status: " + dfaresult[0])
     else:
         dfa_button.setEnabled(False)
+        stack_button.setEnabled(False)
         types[len(types) - 1] = "illegal token"  # modify this
     populateTable(tokens, types)
     if gr.accepted:
         tree_button.setEnabled(True)
-        parse_status_label.setText("Parse Status: Accepted")
+        parse_status_label.setText("Parser status: Accepted")
     else:
         tree_button.setEnabled(False)
-        parse_status_label.setText("Parse Status: Rejected")
+        parse_status_label.setText("Parser status: Rejected")
 
 
 def showdfa():
@@ -69,6 +71,10 @@ def draw_tree():
 
     display()
 
+def show_parse_table():
+    print("Showing Parse Table")
+    # Todo write code here for displaying the parse table
+    # You can mimic the stack_table.py code
 
 app = QApplication([])
 main_widget = QWidget()
@@ -78,17 +84,20 @@ text_edit.setTabStopWidth(15)
 label = QLabel('Enter the TINY sample code below !')
 scanner_status_label = QLabel("Scanner status: Waiting...")
 syntax_status_label = QLabel("Syntax status: Waiting...")
-parse_status_label = QLabel("Parse Status: Waiting...")
+parse_status_label = QLabel("Parser status: Waiting...")
 submit_button = QPushButton('Submit')
+parse_table_button = QPushButton("Show Parse Table")
 dfa_button = QPushButton('Show DFA')
 stack_button = QPushButton('Show Stack Table')
 tree_button = QPushButton('Show Parse Tree')
 submit_button.clicked.connect(submit)
 dfa_button.setEnabled(False)
 dfa_button.clicked.connect(showdfa)
+stack_button.setEnabled(False)
 stack_button.clicked.connect(show_stack_table)
 tree_button.clicked.connect(draw_tree)
 tree_button.setEnabled(False)
+parse_table_button.clicked.connect(show_parse_table)
 
 table = QTableWidget()
 table.setColumnCount(2)
@@ -105,10 +114,11 @@ subgrid.addWidget(table)
 # grid.addWidget(text_edit)
 grid.addLayout((subgrid))
 grid.addWidget(scanner_status_label)
-grid.addWidget(syntax_status_label)
+#grid.addWidget(syntax_status_label)
 grid.addWidget(parse_status_label)
 grid.addWidget(submit_button)
-grid.addWidget(dfa_button)
+grid.addWidget(parse_table_button)
+#grid.addWidget(dfa_button)
 grid.addWidget(stack_button)
 grid.addWidget(tree_button)
 # grid.addWidget(tableWidget)
