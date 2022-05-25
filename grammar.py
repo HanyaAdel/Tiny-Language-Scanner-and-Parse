@@ -33,14 +33,20 @@
     #8 ---> identifier
     #9 ---> number
 
+
 import copy
+from tree import tree_add, tree_root
 
 class Grammar:
         
     In = []
-
+    nodes = []
+    mapToken = []
     stack_table = []
-    cnt =  1
+    stack_table_modified = []
+    cnt = 1
+    nodeNumber = -1
+    accepted = False
     parseTable = {
         0: {
             'repeat': 's5',
@@ -160,90 +166,115 @@ class Grammar:
     }
 
     stack, symbols = [0], []
+    symbolsNumber = []
+    def changeTokens(self, types=[], tokens = []):
 
-
-    def changeTokens(self, types=[]):
-        
         for token in types:
-            if token == "ID":
-                self.In.append("identifier")
-            elif token == "NUM":
-                self.In.append("number")
-            elif token == "assign":
-                self.In.append(":=")
-            elif token == ";":
-                self.In.append(";")
-            elif token == "repeat":
-                self.In.append("repeat")
-            elif token == "until":
-                self.In.append("until")
+            self.In.append(token)
+            # if token == "ID":
+            #     self.In.append("identifier")
+            # elif token == "NUM":
+            #     self.In.append("number")
+            # elif token == "assign":
+            #     self.In.append(":=")
+            # elif token == ";":
+            #     self.In.append(";")
+            # elif token == "repeat":
+            #     self.In.append("repeat")
+            # elif token == "until":
+            #     self.In.append("until")
+            # elif token == "COMP":
+            #     self.In.append("=")
+        
+        self.mapToken = copy.deepcopy(tokens)
 
-
+        
+    def addToStackTable (self, cnt = [], stack = [], symbol = [], input = [], action = [], stackTable = []):
+        temp = []
+        temp.append(cnt)
+        temp.append (stack)
+        temp.append (symbol)
+        temp.append (input)
+        temp.append (action)
+        stackTable.append (temp)
 
     def clr(self):
         self.In.clear()
         self.stack_table.clear()
+        self.stack_table_modified.clear()
         self.symbols.clear()
         self.stack.clear()
         self.stack.append(0)
+        self.mapToken.clear()
+        self.nodes.clear()
+        self.cnt = 1
+        self.nodeNumber = -1
+        self.symbolsNumber.clear()
+        self.accepted = False
 
 
-    def func(self, types=[]):
+    def func(self, types=[], tokens = []):
         self.clr()
-        self.changeTokens(types)
+        self.changeTokens(types, tokens)
         self.In.append("$")
-
+        self.mapToken.append("$")
         while len(self.In) > 0:
 
-
-            temp = []
-            temp.append(self.cnt)
             self.cnt +=1
-            stackCpy = copy.deepcopy(self.stack)
-            symbolCpy = copy.deepcopy(self.symbols)
-            inCpy = copy.deepcopy(self.In)
-            temp.append(stackCpy)
-            temp.append(symbolCpy)
-            temp.append(inCpy)
-
-
-
+            self.nodeNumber += 1
             currInput = self.In[0]
-            
+            currToken = self.mapToken[0]
+            currStatment = currInput
             lastElement = self.stack[-1]
-
-            action = ""
+            
+            action = "Not Accepted"
 
             if currInput in self.parseTable[lastElement].keys():
                 action = self.parseTable[lastElement][currInput]
             else:
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbols), copy.deepcopy(self.In), action, self.stack_table)
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbolsNumber), copy.deepcopy(self.In), action, self.stack_table_modified)
                 print("not accepted")
                 break
             
-            temp.append(action)
-
-            self.stack_table.append(temp)
+            self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbols), copy.deepcopy(self.In), action, self.stack_table)
+            self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbolsNumber), copy.deepcopy(self.In), action, self.stack_table_modified)
+            
 
             if action == "acc":
+                self.accepted = True
                 print("accepted")
                 break
 
             
             elif action[0] == 's':
                 self.In.pop(0)
+                self.mapToken.pop(0)
                 self.stack.append(int(action[1:]))
                 self.symbols.append(currInput)
+                tempNodes = [currStatment, currToken]
+                self.nodes.append(tempNodes)
+                
             
 
             elif action[0] == 'r':
                 state = int(action[1:])
                 seq = self.rightOp_dict[state]
-                
+                leftOp = self.leftOp_dict[state]
                 subList = self.symbols[-len(seq):]
-
+                currStatment = leftOp
+                currToken = leftOp
                 if (subList == seq):
+                    tempNodes = [currStatment, currToken]
+                    self.nodes.append(tempNodes)
+                    temp_list = []
+                    for i in range(len(self.symbolsNumber)-len(seq), len(self.symbolsNumber)):
+                        temp_list.append(self.symbolsNumber[i])
+                    print(temp_list)
+                    tree_add(temp_list,int(self.nodeNumber))
                     del self.symbols[-len(seq):]
-                    leftOp = self.leftOp_dict[state]
+                    del self.symbolsNumber[-len (seq):]
+
                     self.symbols.append(leftOp)
 
                     del self.stack[-len(seq):]
@@ -253,14 +284,28 @@ class Grammar:
                     self.stack.append(int (element))
             
             else:
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbols), copy.deepcopy(self.In), action, self.stack_table)
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbolsNumber), copy.deepcopy(self.In), action, self.stack_table_modified)
+
                 print ("not accepted" )
                 break
 
-            #print(temp)
+            self.symbolsNumber.append(self.nodeNumber)
+
+
+        self.nodes.append(["stmt-seq'","stmt-seq'"])
+        tree_add([self.nodeNumber-1],self.nodeNumber)
+        tree_root(self.nodeNumber)
 
         for l in self.stack_table:
             print(l)
-        
+        print("-------------------------------------------------------------------------")
+
+        for l in self.stack_table_modified:
+            print(l)
+        print("-------------------------------------------------------------------------")
+        for node in self.nodes:
+            print(node)
         print("-------------------------------------------------------------------------")
 
 

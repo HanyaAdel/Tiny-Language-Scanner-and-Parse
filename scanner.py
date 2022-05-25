@@ -94,13 +94,13 @@ class Scanner:
             if i in reserved_words:
                 types.append(i)
             elif i in comparison_operators:
-                types.append("COMP")
+                types.append("=")
             elif i == ";":
                 types.append(";")
             elif i.isdigit():
-                types.append("NUM")
+                types.append("number")
             elif i == ":=":
-                types.append("assign")
+                types.append(":=")
             else:
-                types.append("ID")
+                types.append("identifier")
         return (status,tokens, types)
