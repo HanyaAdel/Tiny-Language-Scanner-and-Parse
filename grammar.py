@@ -45,6 +45,7 @@ class Grammar:
     stack_table = []
     stack_table_modified = []
     cnt = 1
+    nodeNumber = -1
     accepted = False
     parseTable = {
         0: {
@@ -188,6 +189,14 @@ class Grammar:
         self.mapToken = copy.deepcopy(tokens)
 
         
+    def addToStackTable (self, cnt = [], stack = [], symbol = [], input = [], action = [], stackTable = []):
+        temp = []
+        temp.append(cnt)
+        temp.append (stack)
+        temp.append (symbol)
+        temp.append (input)
+        temp.append (action)
+        stackTable.append (temp)
 
     def clr(self):
         self.In.clear()
@@ -199,6 +208,7 @@ class Grammar:
         self.mapToken.clear()
         self.nodes.clear()
         self.cnt = 1
+        self.nodeNumber = -1
         self.symbolsNumber.clear()
         self.accepted = False
 
@@ -210,46 +220,26 @@ class Grammar:
         self.mapToken.append("$")
         while len(self.In) > 0:
 
-
-            temp = [] 
-            tempModified = []
-            
-            temp.append(self.cnt)
-            tempModified.append(self.cnt)
-            
             self.cnt +=1
-            
-            stackCpy = copy.deepcopy(self.stack)
-            symbolCpy = copy.deepcopy(self.symbols)
-            symbolsNumberCpy = copy.deepcopy(self.symbolsNumber)
-            inCpy = copy.deepcopy(self.In)
-            
-            temp.append(stackCpy)
-            temp.append(symbolCpy)
-            temp.append(inCpy)
-
-            tempModified.append(stackCpy)
-            tempModified.append(symbolsNumberCpy)
-            tempModified.append(inCpy)
-
+            self.nodeNumber += 1
             currInput = self.In[0]
             currToken = self.mapToken[0]
             currStatment = currInput
             lastElement = self.stack[-1]
             
-            action = ""
+            action = "Not Accepted"
 
             if currInput in self.parseTable[lastElement].keys():
                 action = self.parseTable[lastElement][currInput]
             else:
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbols), copy.deepcopy(self.In), action, self.stack_table)
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbolsNumber), copy.deepcopy(self.In), action, self.stack_table_modified)
                 print("not accepted")
                 break
             
-            temp.append(action)
-            tempModified.append(action)
-
-            self.stack_table.append(temp)
-            self.stack_table_modified.append(tempModified)
+            self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbols), copy.deepcopy(self.In), action, self.stack_table)
+            self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbolsNumber), copy.deepcopy(self.In), action, self.stack_table_modified)
+            
 
             if action == "acc":
                 self.accepted = True
@@ -281,7 +271,7 @@ class Grammar:
                     for i in range(len(self.symbolsNumber)-len(seq), len(self.symbolsNumber)):
                         temp_list.append(self.symbolsNumber[i])
                     print(temp_list)
-                    tree_add(temp_list,int(self.cnt-2))
+                    tree_add(temp_list,int(self.nodeNumber))
                     del self.symbols[-len(seq):]
                     del self.symbolsNumber[-len (seq):]
 
@@ -294,17 +284,18 @@ class Grammar:
                     self.stack.append(int (element))
             
             else:
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbols), copy.deepcopy(self.In), action, self.stack_table)
+                self.addToStackTable(self.cnt, copy.deepcopy(self.stack), copy.deepcopy(self.symbolsNumber), copy.deepcopy(self.In), action, self.stack_table_modified)
+
                 print ("not accepted" )
                 break
 
-            self.symbolsNumber.append(self.cnt -2)
-            # tempNodes = [currStatment, currToken]
-            # self.nodes.append(tempNodes)
+            self.symbolsNumber.append(self.nodeNumber)
 
-            #print(temp)
+
         self.nodes.append(["stmt-seq'","stmt-seq'"])
-        tree_add([self.cnt-3],self.cnt-2)
-        tree_root(self.cnt-2)
+        tree_add([self.nodeNumber-1],self.nodeNumber)
+        tree_root(self.nodeNumber)
 
         for l in self.stack_table:
             print(l)
