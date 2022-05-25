@@ -21,7 +21,7 @@ nodes = [
     ["smt-seq","semt-seq"],             #10
     ["repeat-stmt","repeat-stmt"],      #11
     ["statement","statement"],          #12
-    ["stmt-seq","stmt-seq"],             #13
+    ["stmt-seq","stmt-seq"],            #13
     ["stmt-seq'","stmt-seq'"]           #14
 ]
 """"
