@@ -1,7 +1,6 @@
 import networkx as nx
 from matplotlib import pyplot as plt, animation
 
-fig = plt.figure()
 from networkx.drawing.nx_pydot import graphviz_layout
 
 G = nx.DiGraph()
@@ -25,7 +24,7 @@ i = int(0)
 #     ["stmt-seq'","stmt-seq'"]           #14
 # ]
 # repeat x:=5; until y
-# repeat x := 5; until y z := 5 ; repeat repeat h := 8 ; until n until m
+# repeat x := 5; until y z := 9 ; repeat repeat h := e ; until n until m
 """"
 [1, [0], [], ['repeat', 'identifier', ':=', 'identifier', ';', 'until', 'identifier', '$'], 's5']
 [2, [0, 5], ['repeat'], ['identifier', ':=', 'identifier', ';', 'until', 'identifier', '$'], 's6']
@@ -78,7 +77,7 @@ def tree_add(children,parent):
 def draw():
     positions = graphviz_layout(G, prog="dot", root=root_node)
     nx.draw(G, pos=positions,labels = nx.get_node_attributes(G,"label"), with_labels=True, node_color="White",
-            node_size = 100,node_shape='s',edgecolors=None)
+            node_size = 1000,node_shape='8',edgecolors=None)
 
 
 # tree_add([3], 7)
@@ -94,6 +93,7 @@ def draw():
 # tree_root(14)
 
 def display():
+    fig = plt.figure()
     draw()
     figmanager = plt.get_current_fig_manager()
     figmanager.window.showMaximized()
