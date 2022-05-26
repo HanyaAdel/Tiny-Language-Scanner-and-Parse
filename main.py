@@ -3,9 +3,9 @@ from grammar import Grammar
 from scanner import Scanner
 from dfa import dfa
 from graph import Graph
-from stack_table import StackTable
 from parse_table import ParseTable
 from tree import display, initialize, reset
+from table_widget import StackTable
 
 sc = Scanner()
 gr = Grammar()
