@@ -74,7 +74,7 @@ class ParseTable(QDialog):
         
         self.setFixedSize(1200, 650)
         self.setLayout(grid)
-        
+        self.setWindowTitle("Parse Table")
 
         print(len(parseTable))
         table.setRowCount(len(parseTable))
