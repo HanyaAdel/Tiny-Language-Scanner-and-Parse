@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QTextEdit, QWidget, QTableWidget, \
-    QTableWidgetItem, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QTextEdit, QWidget, QTableWidget, QTableWidgetItem, QHBoxLayout, QVBoxLayout
 from grammar import Grammar
 from scanner import Scanner
 from dfa import dfa
 from graph import Graph
 from stack_table import StackTable
+from parse_table import ParseTable
 from tree import display, initialize, reset
 
 sc = Scanner()
@@ -73,8 +73,9 @@ def draw_tree():
 
 def show_parse_table():
     print("Showing Parse Table")
-    # Todo write code here for displaying the parse table
-    # You can mimic the stack_table.py code
+    dialog = ParseTable()
+    dialog.exec_()    
+
 
 app = QApplication([])
 main_widget = QWidget()
