@@ -25,6 +25,7 @@ class StackTable(QDialog):
     def __init__(self, parse_list, parent=None):
         super().__init__(parent)
         loadUi('table_widget.ui', self)
+        self.setWindowTitle("Stack Table")
 
         self.tableWidget.setColumnWidth(0, 250)
         self.tableWidget.setColumnWidth(1, 350)
