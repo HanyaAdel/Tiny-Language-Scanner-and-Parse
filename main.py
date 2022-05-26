@@ -5,7 +5,7 @@ from dfa import dfa
 from graph import Graph
 from parse_table import ParseTable
 from tree import display, initialize, reset
-from table_widget import StackTable
+from stack_table import StackTable
 
 sc = Scanner()
 gr = Grammar()
