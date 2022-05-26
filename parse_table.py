@@ -29,14 +29,14 @@ parseTable = [
 class ParseTable(QDialog):
 
 
-    reductions =  QLabel()
+    
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
         
-        
-        self.reductions.setText("r1: stmt-seq’ -> stmt-seq \n" + 
+        reductions =  QLabel()
+        reductions.setText("r1: stmt-seq’ -> stmt-seq \n" + 
         "r2: stmt-seq -> stmt-seq statement \n" +
         "r3: stmt-seq -> statement \n" +
         "r4: statement -> repeat-stmt \n" +
@@ -46,7 +46,7 @@ class ParseTable(QDialog):
         "r8: factor -> identifier \n" +
         "r9: factor -> number\n" )
 
-        self.reductions.setFont(QFont('Arial', 15))
+        reductions.setFont(QFont('Arial', 15))
         
 
         
@@ -67,7 +67,7 @@ class ParseTable(QDialog):
 
         subgrid = QHBoxLayout()
         subgrid.addWidget(table)
-        subgrid.addWidget(self.reductions)
+        subgrid.addWidget(reductions)
 
         grid.addLayout(subgrid)
 
